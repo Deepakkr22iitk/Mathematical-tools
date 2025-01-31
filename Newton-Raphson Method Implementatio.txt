@@ -1,0 +1,54 @@
+Newton-Raphson Method Implementation
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double newton_raphson(double x0) {
+    double x = x0;
+    double h;
+    double epsilon = 0.0001;
+    int max_iterations = 100;
+    int iteration = 0;
+    
+    // Example function: x^2 - 4
+    auto f = [](double x) { return x*x - 4; };
+    // Derivative of function: 2x
+    auto df = [](double x) { return 2*x; };
+    
+    cout << "\nIteration\t   x\t\t f(x)\t\t f'(x)\t\t h" << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    
+    do {
+        double fx = f(x);
+        double dfx = df(x);
+        
+        if (abs(dfx) < epsilon) {
+            cout << "Derivative too close to zero. Method failed." << endl;
+            return x;
+        }
+        
+        h = fx / dfx;
+        
+        cout << iteration + 1 << "\t\t" << x << "\t\t" 
+             << fx << "\t\t" << dfx << "\t\t" << h << endl;
+        
+        x = x - h;
+        iteration++;
+        
+    } while (abs(h) >= epsilon && iteration < max_iterations);
+    
+    cout << "\nRoot found at x = " << x << endl;
+    cout << "Total iterations: " << iteration << endl;
+    return x;
+}
+
+int main() {
+    double x0;
+    
+    cout << "Enter initial guess x0: ";
+    cin >> x0;
+    
+    newton_raphson(x0);
+    
+    return 0;
+}

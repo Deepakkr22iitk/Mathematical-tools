@@ -1,0 +1,66 @@
+Bisection Method Implementation
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double bisection_method(double a, double b) {
+    double f_a, f_b, f_c, c;
+    double epsilon = 0.0001;
+    int max_iterations = 100;
+    int iteration = 0;
+    
+    // Example function: x^2 - 4
+    auto f = [](double x) { return x*x - 4; };
+    
+    f_a = f(a);
+    f_b = f(b);
+    
+    // Check if root exists between a and b
+    if (f_a * f_b >= 0) {
+        cout << "No root exists between " << a << " and " << b << endl;
+        return 0;
+    }
+    
+    cout << "\nIteration\t   a\t\t   b\t\t   c\t\t f(c)" << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    
+    while ((b - a) >= epsilon && iteration < max_iterations) {
+        // Find the middle point
+        c = (a + b) / 2;
+        f_c = f(c);
+        
+        cout << iteration + 1 << "\t\t" << a << "\t\t" << b << "\t\t" 
+             << c << "\t\t" << f_c << endl;
+        
+        if (abs(f_c) < epsilon)
+            break;
+            
+        // Determine which half contains root
+        if (f_c * f_a < 0)
+            b = c;
+        else {
+            a = c;
+            f_a = f_c;
+        }
+        
+        iteration++;
+    }
+    
+    cout << "\nRoot found at x = " << c << endl;
+    cout << "Total iterations: " << iteration << endl;
+    return c;
+}
+
+int main() {
+    double a, b;
+    
+    cout << "Enter interval [a, b]" << endl;
+    cout << "Enter a: ";
+    cin >> a;
+    cout << "Enter b: ";
+    cin >> b;
+    
+    bisection_method(a, b);
+    
+    return 0;
+}
