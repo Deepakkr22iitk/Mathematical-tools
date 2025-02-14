@@ -1,0 +1,60 @@
+Gaussian Elimination method of Linear systems.
+
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+void gaussianElimination(vector<vector<double>> &augMatrix, int n) {
+    for (int i = 0; i < n; i++) {
+        // Pivoting: Making the diagonal element the largest
+        int maxRow = i;
+        for (int k = i + 1; k < n; k++) {
+            if (abs(augMatrix[k][i]) > abs(augMatrix[maxRow][i])) {
+                maxRow = k;
+            }
+        }
+        swap(augMatrix[i], augMatrix[maxRow]);
+        
+        // Make the pivot element 1 and eliminate column values below it
+        for (int k = i + 1; k < n; k++) {
+            double factor = augMatrix[k][i] / augMatrix[i][i];
+            for (int j = i; j <= n; j++) {
+                augMatrix[k][j] -= factor * augMatrix[i][j];
+            }
+        }
+    }
+    
+    // Back Substitution
+    vector<double> solution(n);
+    for (int i = n - 1; i >= 0; i--) {
+        solution[i] = augMatrix[i][n] / augMatrix[i][i];
+        for (int k = i - 1; k >= 0; k--) {
+            augMatrix[k][n] -= augMatrix[k][i] * solution[i];
+        }
+    }
+    
+    // Print Solution
+    cout << "Solution:\n";
+    for (int i = 0; i < n; i++) {
+        cout << "x[" << i << "] = " << fixed << setprecision(6) << solution[i] << endl;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of equations: ";
+    cin >> n;
+    
+    vector<vector<double>> augMatrix(n, vector<double>(n + 1));
+    cout << "Enter the augmented matrix (coefficients + constants):\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++) {
+            cin >> augMatrix[i][j];
+        }
+    }
+    
+    gaussianElimination(augMatrix, n);
+    
+    return 0;
+}
