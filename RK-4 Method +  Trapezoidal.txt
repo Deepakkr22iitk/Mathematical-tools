@@ -1,0 +1,96 @@
+% RK-4 Method
+% Example: dy/dx = x + y, y(0) = 1, solve from x=0 to x=1 with h=0.1
+
+f = @(x, y) x + y;       % Define the ODE
+x0 = 0;                  % Initial x
+y0 = 1;                  % Initial y
+h = 0.1;                 % Step size
+xn = 1;                  % Final x
+
+% Initialize
+x = x0:h:xn;
+n = length(x);
+y = zeros(1, n);
+y(1) = y0;
+
+% RK-4 loop
+for i = 1:n-1
+    k1 = f(x(i), y(i));
+    k2 = f(x(i) + h/2, y(i) + h*k1/2);
+    k3 = f(x(i) + h/2, y(i) + h*k2/2);
+    k4 = f(x(i) + h, y(i) + h*k3);
+    y(i+1) = y(i) + h*(k1 + 2*k2 + 2*k3 + k4)/6;
+end
+
+% Display result
+disp(table(x', y', 'VariableNames', {'x', 'y'}));
+
+
+__________________________________________________________________________________________________________________________________________________________
+
+% Composite Trapezoidal Rule
+% Example: ∫₀¹ e^x dx
+
+f = @(x) exp(x);    % Function to integrate
+a = 0;              % Lower limit
+b = 1;              % Upper limit
+n = 10;             % Number of subintervals
+
+h = (b - a) / n;
+x = a:h:b;
+y = f(x);
+
+I = h * (0.5*y(1) + sum(y(2:end-1)) + 0.5*y(end));
+
+% Display result
+fprintf('Approximate integral = %.6f\n', I);
+
+
+____________________________________________________________________________________________________________________________________________________________
+
+% RK-4 Method with Step-by-Step Output
+f = @(x, y) x + y;   % Example ODE: dy/dx = x + y
+x0 = 0;
+y0 = 1;
+h = 0.1;
+xn = 1;
+
+x = x0:h:xn;
+n = length(x);
+y = zeros(1, n);
+y(1) = y0;
+
+fprintf('Iteration\tx\t\ty\t\tk1\t\tk2\t\tk3\t\tk4\n');
+for i = 1:n-1
+    k1 = f(x(i), y(i));
+    k2 = f(x(i) + h/2, y(i) + h*k1/2);
+    k3 = f(x(i) + h/2, y(i) + h*k2/2);
+    k4 = f(x(i) + h, y(i) + h*k3);
+    y(i+1) = y(i) + h*(k1 + 2*k2 + 2*k3 + k4)/6;
+    
+    fprintf('%d\t\t%.4f\t%.6f\t%.6f\t%.6f\t%.6f\t%.6f\n', ...
+            i, x(i), y(i), k1, k2, k3, k4);
+end
+
+fprintf('\nFinal Approximate Solution at x = %.2f: y = %.6f\n', x(end), y(end));
+
+
+____________________________________________________________________________________________________________________________________________________________
+
+% Composite Trapezoidal Method with Step-by-Step Output
+f = @(x) exp(x);   % Example: integrate e^x from 0 to 1
+a = 0;
+b = 1;
+n = 10;
+
+h = (b - a) / n;
+x = a:h:b;
+y = f(x);
+
+fprintf('i\t\tx(i)\t\tf(x(i))\n');
+for i = 1:length(x)
+    fprintf('%d\t\t%.4f\t\t%.6f\n', i-1, x(i), y(i));
+end
+
+I = h * (0.5*y(1) + sum(y(2:end-1)) + 0.5*y(end));
+fprintf('\nFinal Approximate Integral: %.6f\n', I);
